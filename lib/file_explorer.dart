@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 import 'dart:io';
 import 'package:filely/fileList/file_list_view.dart';
+import 'package:filely/imageViewer/options_bottom_sheet_widget.dart';
 import 'package:filely/widgets/custom_drawer.dart';
 import 'package:filely/widgets/empty_folder_view.dart';
 import 'package:filely/widgets/permission_waiting_view.dart';
@@ -16,7 +17,7 @@ class FileExplorer extends StatefulWidget {
 }
 
 class _FileExplorerState extends State<FileExplorer> {
-  final FileExplorerController _controller = FileExplorerController();
+  final FileSystemController _controller = FileSystemController();
   bool _isLoading = true;
   bool _hasPermission = false;
 
@@ -30,7 +31,7 @@ class _FileExplorerState extends State<FileExplorer> {
     _hasPermission = await PermissionManager().ensurePermissions();
 
     if (_hasPermission) {
-      await _controller.initialize();
+      await _controller.init();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -98,7 +99,7 @@ class _FileExplorerState extends State<FileExplorer> {
                   valueListenable: _controller.filesNotifier,
                   builder: (context, files, _) {
                     return files.isEmpty
-                        ? EmptyFolderView(onRetry: _controller.initDirectory)
+                        ? EmptyFolderView(onRetry: _controller.init)
                         : FileListView(
                           files: files,
                           controller: _controller,
@@ -129,65 +130,32 @@ class _FileExplorerState extends State<FileExplorer> {
                             }
                           },
                           onFileLongPress: (fileEntity, isDirectory) {
-                            showModalBottomSheet(
-                              context: context,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
-                                ),
-                              ),
-                              builder: (context) {
-                                return Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                      leading: const Icon(
-                                        Icons.drive_file_rename_outline,
-                                      ),
-                                      title: const Text('Renomear'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: const Icon(Icons.content_copy),
-                                      title: const Text('Copiar'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: const Icon(Icons.folder_open),
-                                      title: const Text('Mover'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: const Icon(Icons.delete),
-                                      title: const Text('Excluir'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: const Icon(Icons.share),
-                                      title: const Text('Compartilhar'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: const Icon(Icons.info_outline),
-                                      title: const Text('Propriedades'),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            if (!isDirectory) {
+                              final file = fileEntity as File;
+
+                              final mediaItem = MediaItem(
+                                id: file.path,
+                                title: file.uri.pathSegments.last,
+                                filePath: file.path,
+                                createdAt: file.lastModifiedSync(),
+                                description: null,
+                                thumbnailPath: null,
+                              );
+
+                              showOptionsBottomSheet(
+                                context,
+                                item: mediaItem,
+                                onDelete: (item) {
+                                  _controller.deleteFile(
+                                    File(item.filePath) as String,
+                                  );
+                                },
+                                onDeleteComplete: () async {
+                                  await _controller.listFiles();
+                                  setState(() {});
+                                },
+                              );
+                            }
                           },
                         );
                   },

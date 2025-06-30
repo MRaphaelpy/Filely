@@ -7,12 +7,12 @@ class MoreOptionsSheet extends StatelessWidget {
   final VoidCallback onAddToPlaylist;
 
   const MoreOptionsSheet({
-    Key? key,
+    super.key,
     required this.playbackSpeed,
     required this.onChangePlaybackSpeed,
     required this.onShare,
     required this.onAddToPlaylist,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

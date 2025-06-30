@@ -8,7 +8,7 @@ class FileInfo extends StatelessWidget {
   final bool isDirectory;
   final FileSystemEntity file;
 
-  const FileInfo({
+  const FileInfo({super.key, 
     required this.fileName,
     required this.fileExtension,
     required this.isDirectory,

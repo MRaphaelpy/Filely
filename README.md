@@ -33,9 +33,9 @@ Filely is a modern file explorer for mobile devices built with Flutter. It combi
 
 Get Filely from the Google Play Store or download the APK directly:
 
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="200">](https://play.google.com/store/apps/details?id=com.yourcompany.filely)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="200">](notavailable)
 
-Or download the latest APK from the [releases page](https://github.com/yourusername/filely/releases).
+Or download the latest APK from the [releases page](https://github.com/mraphaelpy/filely/releases).
 
 ## 🖥️ Development
 
@@ -46,7 +46,7 @@ Or download the latest APK from the [releases page](https://github.com/yourusern
 ### Setup
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/filely.git
+git clone https://github.com/mraphaelpy/filely.git
 ```
 
 2. Navigate to the project directory:
@@ -74,7 +74,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-For any inquiries or issues, please open an [issue](https://github.com/yourusername/filely/issues) or contact us at filely@example.com.
+For any inquiries or issues, please open an [issue](https://github.com/mraphaelpy/filely/issues) or contact us at mraphael.py@gmail.com.
 
 ---
 
@@ -103,9 +103,9 @@ Filely é um explorador de arquivos moderno para dispositivos móveis construíd
 
 Obtenha o Filely na Google Play Store ou baixe o APK diretamente:
 
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/pt-br_badge_web_generic.png" width="200">](https://play.google.com/store/apps/details?id=com.yourcompany.filely)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/pt-br_badge_web_generic.png" width="200">](naoexiste)
 
-Ou baixe o APK mais recente da [página de releases](https://github.com/yourusername/filely/releases).
+Ou baixe o APK mais recente da [página de releases](https://github.com/mraphaelpy/filely/releases).
 
 ## 🖥️ Desenvolvimento
 
@@ -116,7 +116,7 @@ Ou baixe o APK mais recente da [página de releases](https://github.com/youruser
 ### Configuração
 1. Clone o repositório:
 ```bash
-git clone https://github.com/yourusername/filely.git
+git clone https://github.com/mraphaelpy/filely.git
 ```
 
 2. Navegue até o diretório do projeto:
@@ -144,4 +144,4 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 ## 📞 Contato
 
-Para quaisquer dúvidas ou problemas, por favor, abra uma [issue](https://github.com/yourusername/filely/issues) ou entre em contato conosco pelo email filely@example.com.
+Para quaisquer dúvidas ou problemas, por favor, abra uma [issue](https://github.com/yourusername/filely/issues) ou entre em contato conosco pelo email mraphael.py@gmail.com.

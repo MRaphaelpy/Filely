@@ -1,9 +1,11 @@
-import 'dart:io';
-
+import 'package:filely/imageViewer/app_bar_widget.dart';
+import 'package:filely/imageViewer/floating_controls_widget.dart';
+import 'package:filely/imageViewer/image_widget.dart';
+import 'package:filely/imageViewer/options_bottom_sheet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
 import 'dart:async';
+import 'dart:io';
 
 class ImageViewerM3 extends StatefulWidget {
   final String imageUrl;
@@ -44,8 +46,6 @@ class _ImageViewerM3State extends State<ImageViewerM3>
 
   bool _isLoading = true;
   bool _hasError = false;
-
-  Color? _dominantColor;
 
   @override
   void initState() {
@@ -115,6 +115,39 @@ class _ImageViewerM3State extends State<ImageViewerM3>
     }
   }
 
+  void _handleImageOptions() {
+    final File imageFile = File(widget.imageUrl);
+
+    // Criar um objeto MediaItem com os dados da imagem
+    final MediaItem item = MediaItem(
+      id: imageFile.path.split('/').last, // Usar o nome do arquivo como ID
+      title: widget.title ?? 'Imagem',
+      description: widget.subtitle,
+      filePath: widget.imageUrl,
+      createdAt:
+          imageFile.existsSync()
+              ? imageFile.lastModifiedSync()
+              : DateTime.now(),
+      thumbnailPath: null, // Opcional: pode ser o mesmo que filePath
+    );
+
+    // Chamar showOptionsBottomSheet com os parâmetros necessários
+    showOptionsBottomSheet(
+      context,
+      item: item,
+      onDelete: (deletedItem) {
+        // Fechar visualizador após exclusão
+        Navigator.of(context).pop();
+      },
+      onDeleteComplete: () {
+        // Opcional: fazer algo depois que a exclusão for concluída
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Imagem excluída com sucesso')),
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     _transformationController.dispose();
@@ -137,9 +170,20 @@ class _ImageViewerM3State extends State<ImageViewerM3>
     return Scaffold(
       backgroundColor: widget.backgroundColor ?? colorScheme.surface,
       extendBodyBehindAppBar: true,
-      appBar: widget.showAppBar ? _buildAppBar(context) : null,
+      appBar:
+          widget.showAppBar
+              ? AppBarImageWidget(
+                title: widget.title,
+                subtitle: widget.subtitle,
+                immersiveMode: widget.immersiveMode,
+                onBackPressed: () => Navigator.of(context).pop(),
+                onMoreOptionsPressed:
+                    _handleImageOptions, // Usar o método que chama o bottom sheet
+              )
+              : null,
       body: Stack(
         fit: StackFit.expand,
+
         children: [
           GestureDetector(
             onTap: widget.immersiveMode ? _toggleControls : null,
@@ -150,7 +194,12 @@ class _ImageViewerM3State extends State<ImageViewerM3>
               onInteractionEnd: (_) => _resetControlsTimer(),
               panEnabled: widget.enableGestures,
               scaleEnabled: widget.enableGestures,
-              child: Center(child: _buildImage()),
+              child: Center(
+                child: ImageWidget(
+                  imageUrl: widget.imageUrl,
+                  errorWidget: widget.errorWidget,
+                ),
+              ),
             ),
           ),
           if (widget.enableGestures)
@@ -160,221 +209,8 @@ class _ImageViewerM3State extends State<ImageViewerM3>
                 behavior: HitTestBehavior.translucent,
               ),
             ),
-          _buildFloatingControls(context),
         ],
       ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor:
-          widget.immersiveMode
-              ? Colors.transparent
-              : Theme.of(context).colorScheme.surface,
-      elevation: 0,
-      centerTitle: false,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => Navigator.of(context).pop(),
-        tooltip: 'Voltar',
-      ),
-      title:
-          widget.title != null
-              ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.title!,
-                    style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (widget.subtitle != null)
-                    Text(
-                      widget.subtitle!,
-                      style: Theme.of(context).textTheme.bodySmall,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              )
-              : null,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share_outlined),
-          onPressed: () {
-            // Implementar compartilhamento
-          },
-          tooltip: 'Compartilhar',
-        ),
-        IconButton(
-          icon: const Icon(Icons.more_vert),
-          onPressed: () => _showOptionsBottomSheet(context),
-          tooltip: 'Mais opções',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImage() {
-    final file = File(widget.imageUrl);
-
-    return Hero(
-      tag: widget.imageUrl,
-      child: Image.file(
-        file,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return widget.errorWidget ??
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.broken_image_rounded,
-                      size: 64,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Não foi possível carregar a imagem',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: 8),
-                    FilledButton.tonal(
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      child: const Text('Tentar novamente'),
-                    ),
-                  ],
-                ),
-              );
-        },
-      ),
-    );
-  }
-
-  Widget _buildFloatingControls(BuildContext context) {
-    if (!widget.immersiveMode) return const SizedBox.shrink();
-
-    return ValueListenableBuilder<bool>(
-      valueListenable: _isControlsVisible,
-      builder: (context, isVisible, child) {
-        return AnimatedOpacity(
-          opacity: isVisible ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 200),
-          child: child,
-        );
-      },
-      child:
-          _hasError
-              ? const SizedBox.shrink()
-              : Stack(
-                children: [
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 120,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            _dominantColor ?? Colors.black87,
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 16 + MediaQuery.of(context).padding.bottom,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildControlButton(
-                          icon: Icons.zoom_out_map,
-                          onPressed: _resetTransformation,
-                        ),
-                        _buildControlButton(
-                          icon: Icons.share_outlined,
-                          onPressed: () {
-                            // Implementar compartilhamento
-                          },
-                        ),
-                        _buildControlButton(
-                          icon: Icons.download_outlined,
-                          onPressed: () {
-                            // Implementar download
-                          },
-                        ),
-                        _buildControlButton(
-                          icon: Icons.more_horiz,
-                          onPressed: () => _showOptionsBottomSheet(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-    );
-  }
-
-  Widget _buildControlButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-  }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black26,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: IconButton(
-            icon: Icon(icon, color: Colors.white),
-            onPressed: onPressed,
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showOptionsBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder:
-          (context) => Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.download_outlined),
-                  title: const Text('Salvar imagem'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    // Implementar download
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.share_outlined),
-                  title: const Text('Compartilhar'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
     );
   }
 }
