@@ -20,8 +20,8 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.8.1'
-          channel: 'stable'
+          flutter-version: '3.22.0' 
+          channel: 'beta'
           cache: true
 
       - name: Install dependencies
@@ -48,6 +48,14 @@ jobs:
         run: |
           VERSION=$(grep -oP '(?<=version: ).*(?=\+)' pubspec.yaml || echo '1.0.0')
           echo "app_version=$VERSION" >> $GITHUB_OUTPUT
+          
+      - name: Get Flutter and Dart versions
+        id: versions
+        run: |
+          FLUTTER_VERSION=$(flutter --version | grep -oP '(?<=Flutter )[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+          DART_VERSION=$(flutter --version | grep -oP '(?<=Dart SDK )[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+          echo "flutter_version=$FLUTTER_VERSION" >> $GITHUB_OUTPUT
+          echo "dart_version=$DART_VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
@@ -57,7 +65,12 @@ jobs:
           body: |
             ⚠️ Unsigned release build - para testes internos ⚠️
             
-            Automatic build from push to main.
+            Automatic build from push to ${{ github.ref_name }} branch.
+            
+            ## Build Info
+            - Flutter version: ${{ steps.versions.outputs.flutter_version }}
+            - Dart version: ${{ steps.versions.outputs.dart_version }}
+            - Commit: ${{ github.sha }}
             
             ## Changes
             ${{ github.event.head_commit.message }}
