@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:filely/models/FileOperation.dart';
-import 'package:filely/models/FileOperationType.dart';
+import 'package:Filely/models/FileOperation.dart';
+import 'package:Filely/models/FileOperationType.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 

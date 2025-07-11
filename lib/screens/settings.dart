@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:filely/l10n/app_localizations.dart';
-import 'package:filely/providers/providers.dart';
-import 'package:filely/screens/about.dart';
-import 'package:filely/utils/utils.dart';
+import 'package:Filely/l10n/app_localizations.dart';
+import 'package:Filely/providers/providers.dart';
+import 'package:Filely/screens/about.dart';
+import 'package:Filely/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -322,7 +322,7 @@ class _SettingsState extends State<Settings> {
             subtitle: Text(l10n.rateAppSubtitle),
             leading: const Icon(Icons.star_outline),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () => _launchUrl('market://details?id=com.example.filely'),
+            onTap: () => _launchUrl('market://details?id=com.mraphaelpy.filely'),
           ),
           const Divider(height: 1, indent: 16, endIndent: 16),
           ListTile(

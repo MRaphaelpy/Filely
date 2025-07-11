@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:filely/providers/providers.dart';
-import 'package:filely/screens/file_info_screen.dart';
-import 'package:filely/screens/folder/widgets/widgets.dart';
-import 'package:filely/utils/utils.dart';
-import 'package:filely/widgets/file_operation_status_bar.dart';
-import 'package:filely/widgets/widgets.dart';
+import 'package:Filely/providers/providers.dart';
+import 'package:Filely/screens/file_info_screen.dart';
+import 'package:Filely/screens/folder/widgets/widgets.dart';
+import 'package:Filely/utils/utils.dart';
+import 'package:Filely/widgets/file_operation_status_bar.dart';
+import 'package:Filely/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as pathlib;
 import 'package:provider/provider.dart';

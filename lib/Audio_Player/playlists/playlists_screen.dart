@@ -1,4 +1,4 @@
-import 'package:filely/Audio_Player/playlists/dialogs/playlist_detail_delete_dialog.dart';
+import 'package:Filely/Audio_Player/playlists/dialogs/playlist_detail_delete_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

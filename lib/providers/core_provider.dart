@@ -3,7 +3,7 @@ import 'dart:isolate';
 import 'dart:ui';
 import 'dart:async';
 import 'package:disk_space_plus/disk_space_plus.dart';
-import 'package:filely/utils/utils.dart';
+import 'package:Filely/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

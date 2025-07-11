@@ -1,5 +1,6 @@
+import 'package:Filely/core/constants/app_strings.dart';
+import 'package:Filely/services/audio_service.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:filely/services/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ Future<void> main() async {
     audioHandler = await AudioService.init(
       builder: () => MyAudioHandler(),
       config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.example.filely.audio',
+        androidNotificationChannelId: AppStrings.audioPlayerChannelId,
         androidNotificationChannelName: 'Filely Audio Player',
         androidNotificationChannelDescription: 'Controls for music playback',
         androidNotificationOngoing: true,

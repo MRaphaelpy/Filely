@@ -1,4 +1,4 @@
-import 'package:filely/shared/widgets/custom_loader.dart';
+import 'package:Filely/shared/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import '../../core/constants/constants.dart';
 

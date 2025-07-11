@@ -1,4 +1,4 @@
-import 'package:filely/Audio_Player/playlists/playlists_overview/widgets/playlists_empty_state.dart';
+import 'package:Filely/Audio_Player/playlists/playlists_overview/widgets/playlists_empty_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

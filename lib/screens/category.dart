@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:filely/providers/providers.dart';
-import 'package:filely/utils/utils.dart';
-import 'package:filely/widgets/widgets.dart';
+import 'package:Filely/providers/providers.dart';
+import 'package:Filely/utils/utils.dart';
+import 'package:Filely/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';

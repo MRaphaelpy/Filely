@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:filely/core/core.dart';
-import 'package:filely/screens/main_screen/main_screen.dart';
-import 'package:filely/services/permission_service.dart';
-import 'package:filely/utils/utils.dart';
-import 'package:filely/widgets/widgets.dart';
+import 'package:Filely/core/core.dart';
+import 'package:Filely/screens/main_screen/main_screen.dart';
+import 'package:Filely/services/permission_service.dart';
+import 'package:Filely/utils/utils.dart';
+import 'package:Filely/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:filely/core/core.dart';
-import 'package:filely/utils/utils.dart';
-import 'package:filely/widgets/video_thumbnail.dart';
+import 'package:Filely/core/core.dart';
+import 'package:Filely/utils/utils.dart';
+import 'package:Filely/widgets/video_thumbnail.dart';
 import 'package:flutter/material.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:open_file/open_file.dart';

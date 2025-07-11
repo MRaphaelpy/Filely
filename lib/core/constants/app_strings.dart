@@ -32,7 +32,7 @@ class AppStrings {
   static String unknownArtist(BuildContext context) =>
       AppLocalizations.of(context)!.unknownArtist;
 
-  static const String audioPlayerChannelId = 'com.example.filely.audio';
+  static const String audioPlayerChannelId = 'com.mraphaelpy.filely.audio';
   static const String audioPlayerChannelName = 'Filely Audio Player';
   static const String audioPlayerChannelDescription =
       'Controls for music playback';

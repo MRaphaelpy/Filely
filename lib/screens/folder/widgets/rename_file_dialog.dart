@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:filely/screens/folder/widgets/functions.dart';
-import 'package:filely/widgets/custom_loader.dart';
+import 'package:Filely/screens/folder/widgets/functions.dart';
+import 'package:Filely/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as pathlib;
 

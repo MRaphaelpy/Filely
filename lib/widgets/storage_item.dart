@@ -1,6 +1,5 @@
-import 'package:filely/screens/folder/folder.dart';
-import 'package:filely/utils/color_extensions.dart';
-import 'package:filely/utils/utils.dart';
+import 'package:Filely/screens/folder/folder.dart';
+import 'package:Filely/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 

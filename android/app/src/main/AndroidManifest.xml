@@ -33,7 +33,7 @@
                      tools:ignore="ProtectedPermissions" />
     
     <application
-        android:label="filely"
+        android:label="Filely"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
