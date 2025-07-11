@@ -1,4 +1,4 @@
-name: Build & Release APK and AAB
+name: Flutter Build Release
 
 on:
   push:
@@ -6,20 +6,25 @@ on:
       - main
 
 jobs:
-  build:
+  Flutter_Build:
+    name: Build APK and AAB
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Get Repository
+        uses: actions/checkout@v3
 
-      - name: Set up Flutter
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+
+      - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
-          flutter-version: 3.22.2
+          channel: 'stable'
 
-      - name: Install dependencies
+      - name: Run Flutter Pub Get
         run: flutter pub get
 
       - name: Build APK
@@ -34,7 +39,7 @@ jobs:
           tag_name: build-${{ github.run_number }}
           name: Filely Build ${{ github.run_number }}
           body: |
-            🔄 Auto-generated release for Filely.
+            ✅ Auto-generated release for Filely.
             Includes:
             - APK (.apk)
             - App Bundle (.aab)
