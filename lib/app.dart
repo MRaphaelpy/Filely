@@ -9,7 +9,7 @@ import 'core/constants/constants.dart';
 import 'core/themes/themes.dart';
 import 'l10n/app_localizations.dart';
 import 'main.dart';
-import 'playerAudio/audio_player_screen.dart';
+import 'Audio_Player/audio_player_screen.dart';
 import 'providers/app_provider.dart';
 import 'providers/language_provider.dart';
 import 'screens/ios_error.dart';
