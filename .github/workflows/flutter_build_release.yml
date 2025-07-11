@@ -4,20 +4,20 @@ on:
   push:
     branches:
       - main
-      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.8.x'
+          channel: stable
+          flutter-version: 3.22.2
 
       - name: Install dependencies
         run: flutter pub get
@@ -28,17 +28,16 @@ jobs:
       - name: Build AAB
         run: flutter build appbundle --release
 
-      - name: Upload release to GitHub
+      - name: Upload Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
           name: Filely Build ${{ github.run_number }}
           body: |
-            ✅ Automatic release of Filely (v1.0.0+1)
-
+            🔄 Auto-generated release for Filely.
             Includes:
-            - app-release.apk
-            - app-release.aab
+            - APK (.apk)
+            - App Bundle (.aab)
           files: |
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/bundle/release/app-release.aab
