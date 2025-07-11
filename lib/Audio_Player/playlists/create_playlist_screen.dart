@@ -1,4 +1,4 @@
-import 'package:filely/widgets/custom_loader.dart';
+import 'package:Filely/widgets/custom_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/playlist_provider.dart';

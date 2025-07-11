@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:filely/Audio_Player/album_art.dart';
-import 'package:filely/Audio_Player/play_pause_button.dart';
+import 'package:Filely/Audio_Player/album_art.dart';
+import 'package:Filely/Audio_Player/play_pause_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

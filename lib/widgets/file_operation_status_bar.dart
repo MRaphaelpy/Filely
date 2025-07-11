@@ -1,4 +1,4 @@
-import 'package:filely/models/FileOperationType.dart';
+import 'package:Filely/models/FileOperationType.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

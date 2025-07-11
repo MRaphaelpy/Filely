@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:filely/widgets/widgets.dart';
+import 'package:Filely/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;

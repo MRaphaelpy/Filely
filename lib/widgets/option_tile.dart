@@ -1,4 +1,3 @@
-import 'package:filely/utils/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 class OptionItem {

@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:filely/shared/shared.dart';
-import 'package:filely/utils/utils.dart';
+import 'package:Filely/shared/shared.dart';
+import 'package:Filely/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class AddFileDialog extends StatefulWidget {

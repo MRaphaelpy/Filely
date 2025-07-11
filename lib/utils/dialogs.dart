@@ -1,86 +1,85 @@
 import 'dart:io';
 
-import 'package:filely/core/constants/app_strings.dart';
-import 'package:filely/widgets/widgets.dart';
+import 'package:Filely/widgets/custom_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../core/constants/app_strings.dart';
 
 class Dialogs {
   static showExitDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => CustomAlert(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 15),
-              Text(
-                AppStrings.appName,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              SizedBox(height: 25),
-              Text(
-                'Are you sure you want to quit?',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-              ),
-              SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    height: 40,
-                    width: 130,
-                    child: OutlinedButton(
-                      child: Text(
-                        'No',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                          Colors.white,
-                        ),
-                        shape: WidgetStateProperty.all(
-                          RoundedRectangleBorder(
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        content: CustomAlert(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const SizedBox(height: 15),
+                const Text(
+                  AppStrings.appName,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 25),
+                const Text(
+                  'Essa ação irá fechar o aplicativo.',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 40,
+                      width: 130,
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
-                        side: WidgetStateProperty.all(
-                          BorderSide(
+                        child: Text(
+                          'Não',
+                          style: TextStyle(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    height: 40,
-                    width: 130,
-                    child: ElevatedButton(
-                      child: Text('Yes', style: TextStyle(color: Colors.white)),
-                      onPressed: () => exit(0),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.secondary,
-                        ),
-                        shape: WidgetStateProperty.all(
-                          RoundedRectangleBorder(
+                    SizedBox(
+                      height: 40,
+                      width: 130,
+                      child: ElevatedButton(
+                        onPressed: () => exit(0),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.secondary,
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                         ),
+                        child: const Text(
+                          'Sim',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-            ],
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),

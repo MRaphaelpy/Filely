@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:filely/widgets/dir_popup.dart';
+import 'package:Filely/widgets/dir_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 

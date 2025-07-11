@@ -1,4 +1,4 @@
-import 'package:filely/Audio_Player/playlists/playlists_overview/widgets/playlists_grid_item.dart';
+import 'package:Filely/Audio_Player/playlists/playlists_overview/widgets/playlists_grid_item.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../models/playlist_models.dart';

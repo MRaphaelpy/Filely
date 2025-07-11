@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:filely/utils/utils.dart';
+import 'package:Filely/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isolate_handler/isolate_handler.dart';
 import 'package:mime_type/mime_type.dart';

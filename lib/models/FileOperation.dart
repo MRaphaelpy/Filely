@@ -1,4 +1,4 @@
-import 'package:filely/models/FileOperationType.dart';
+import 'package:Filely/models/FileOperationType.dart';
 
 class FileOperation {
   final String sourcePath;

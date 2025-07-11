@@ -1,5 +1,5 @@
-import 'package:filely/providers/providers.dart';
-import 'package:filely/utils/utils.dart';
+import 'package:Filely/providers/providers.dart';
+import 'package:Filely/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';

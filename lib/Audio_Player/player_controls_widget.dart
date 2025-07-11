@@ -1,4 +1,4 @@
-import 'package:filely/shared/shared.dart';
+import 'package:Filely/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

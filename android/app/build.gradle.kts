@@ -5,9 +5,9 @@ plugins {
 }
 
 android {
-    namespace = "com.example.filely"
+    namespace = "com.mraphaelpy.filely"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"  // Versão atualizada do NDK aqui
+    ndkVersion = "27.0.12077973" 
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.filely"
+        applicationId = "com.mraphaelpy.filely"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

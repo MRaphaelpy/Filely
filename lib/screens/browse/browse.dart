@@ -1,16 +1,16 @@
 import 'dart:io';
 
-import 'package:filely/core/core.dart';
-import 'package:filely/providers/providers.dart';
-import 'package:filely/screens/apps_screen.dart';
-import 'package:filely/screens/browse/recent_files.dart';
-import 'package:filely/screens/category.dart';
-import 'package:filely/screens/downloads.dart';
-import 'package:filely/screens/images.dart';
-import 'package:filely/screens/search.dart';
-import 'package:filely/screens/whatsapp_status.dart';
-import 'package:filely/utils/utils.dart';
-import 'package:filely/widgets/widgets.dart';
+import 'package:Filely/core/core.dart';
+import 'package:Filely/providers/providers.dart';
+import 'package:Filely/screens/apps_screen.dart';
+import 'package:Filely/screens/browse/recent_files.dart';
+import 'package:Filely/screens/category.dart';
+import 'package:Filely/screens/downloads.dart';
+import 'package:Filely/screens/images.dart';
+import 'package:Filely/screens/search.dart';
+import 'package:Filely/screens/whatsapp_status.dart';
+import 'package:Filely/utils/utils.dart';
+import 'package:Filely/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

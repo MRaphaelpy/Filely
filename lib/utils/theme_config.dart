@@ -1,6 +1,5 @@
-import 'package:filely/utils/color_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/material.dart';
 
 class ThemeConfig {
   static Color lightPrimary = Color(0xfff3f4f9);

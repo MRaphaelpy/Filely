@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:filely/providers/providers.dart';
-import 'package:filely/screens/folder/folder.dart';
-import 'package:filely/utils/utils.dart';
-import 'package:filely/widgets/dir_item.dart';
-import 'package:filely/widgets/file_item.dart';
+import 'package:Filely/providers/providers.dart';
+import 'package:Filely/screens/folder/folder.dart';
+import 'package:Filely/utils/utils.dart';
+import 'package:Filely/widgets/dir_item.dart';
+import 'package:Filely/widgets/file_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

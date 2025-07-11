@@ -1,4 +1,4 @@
-package com.example.filely
+package com.mraphaelpy.filely
 
 import android.os.StatFs
 import android.os.Environment
@@ -7,7 +7,6 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 import com.ryanheise.audioservice.AudioServiceActivity
 
-// A classe deve estender AudioServiceActivity em vez de FlutterActivity
 class MainActivity : AudioServiceActivity() {
     private val CHANNEL = "mraphaelpy.filely/storage"
 

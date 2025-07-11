@@ -1,4 +1,4 @@
-import 'package:filely/utils/color_extensions.dart';
+import 'package:Filely/utils/color_extensions.dart';
 import 'package:flutter/material.dart';
 import '../../core/constants/constants.dart';
 

@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:filely/Audio_Player/audio_player_screen.dart';
-import 'package:filely/providers/file_operations_provider.dart';
-import 'package:filely/utils/utils.dart';
-import 'package:filely/widgets/add_to_playlist_sheet.dart';
-import 'package:filely/widgets/file_icon.dart';
-import 'package:filely/widgets/file_popup.dart';
+import 'package:Filely/Audio_Player/audio_player_screen.dart';
+import 'package:Filely/providers/file_operations_provider.dart';
+import 'package:Filely/utils/utils.dart';
+import 'package:Filely/widgets/add_to_playlist_sheet.dart';
+import 'package:Filely/widgets/file_icon.dart';
+import 'package:Filely/widgets/file_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:open_file/open_file.dart';

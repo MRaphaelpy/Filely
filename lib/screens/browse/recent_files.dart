@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:filely/providers/providers.dart';
-import 'package:filely/screens/category.dart';
-import 'package:filely/utils/navigate.dart';
-import 'package:filely/widgets/widgets.dart';
+import 'package:Filely/providers/providers.dart';
+import 'package:Filely/screens/category.dart';
+import 'package:Filely/utils/navigate.dart';
+import 'package:Filely/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

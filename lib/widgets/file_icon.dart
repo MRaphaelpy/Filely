@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:filely/shared/widgets/custom_loader.dart';
-import 'package:filely/widgets/video_thumbnail.dart';
+import 'package:Filely/shared/widgets/custom_loader.dart';
+import 'package:Filely/widgets/video_thumbnail.dart';
 import 'package:flutter/material.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:path/path.dart';

@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:Filely/Audio_Player/app_bar_widget.dart';
+import 'package:Filely/Audio_Player/audio_progress_bar_widget.dart';
+import 'package:Filely/Audio_Player/music_info_widget.dart';
+import 'package:Filely/Audio_Player/player_controls_widget.dart';
+import 'package:Filely/Audio_Player/playlists/playlists_screen.dart';
+import 'package:Filely/main.dart';
+import 'package:Filely/providers/playlist_provider.dart';
+import 'package:Filely/widgets/album_art_widget.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:filely/main.dart';
-import 'package:filely/Audio_Player/music_info_widget.dart';
-import 'package:filely/providers/playlist_provider.dart';
-import 'package:filely/Audio_Player/playlists/playlists_screen.dart';
-import 'package:filely/widgets/album_art_widget.dart';
-import 'package:filely/Audio_Player/app_bar_widget.dart';
-import 'package:filely/Audio_Player/player_controls_widget.dart';
-import 'package:filely/Audio_Player/audio_progress_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
