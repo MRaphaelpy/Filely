@@ -1,5 +1,5 @@
+import 'package:filely/utils/color_extensions.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class MusicInfoWidget extends StatelessWidget {
@@ -46,16 +46,19 @@ class MusicInfoWidget extends StatelessWidget {
           if (albumTitle != null)
             Padding(
               padding: const EdgeInsets.only(top: 6.0),
-              child: Text(
-                    albumTitle!,
-                    style: textTheme.labelMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant.withOpacity(0.7),
-                      fontStyle: FontStyle.italic,
-                    ),
-                  )
-                  .animate(delay: 400.ms)
-                  .fadeIn(duration: 600.ms)
-                  .slideX(begin: 0.02, end: 0),
+              child:
+                  Text(
+                        albumTitle!,
+                        style: textTheme.labelMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
+                          fontStyle: FontStyle.italic,
+                        ),
+                      )
+                      .animate(delay: 400.ms)
+                      .fadeIn(duration: 600.ms)
+                      .slideX(begin: 0.02, end: 0),
             ),
 
           const SizedBox(height: 12),
@@ -67,7 +70,7 @@ class MusicInfoWidget extends StatelessWidget {
                 Icon(
                       Icons.person_outline_rounded,
                       size: 18,
-                      color: colorScheme.primary.withOpacity(0.7),
+                      color: colorScheme.primary.withValues(alpha: 0.7),
                     )
                     .animate(delay: 200.ms)
                     .fadeIn(duration: 400.ms)
@@ -79,25 +82,26 @@ class MusicInfoWidget extends StatelessWidget {
                 const SizedBox(width: 6),
 
                 Expanded(
-                  child: Hero(
-                        tag: 'artist_name_$artist',
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Text(
-                            artist,
-                            style: textTheme.titleMedium?.copyWith(
-                              color: colorScheme.secondary,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 0.2,
+                  child:
+                      Hero(
+                            tag: 'artist_name_$artist',
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Text(
+                                artist,
+                                style: textTheme.titleMedium?.copyWith(
+                                  color: colorScheme.secondary,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: 0.2,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      )
-                      .animate(delay: 300.ms)
-                      .fadeIn(duration: 500.ms)
-                      .slideX(begin: 0.05, end: 0),
+                          )
+                          .animate(delay: 300.ms)
+                          .fadeIn(duration: 500.ms)
+                          .slideX(begin: 0.05, end: 0),
                 ),
               ],
             ),
@@ -129,15 +133,14 @@ class MusicInfoWidget extends StatelessWidget {
         color: colorScheme.onSurface,
         height: 1.1,
         letterSpacing: -0.5,
-        shadows:
-            isPlaying
-                ? [
-                  Shadow(
-                    color: colorScheme.primary.withOpacity(0.3),
-                    blurRadius: 8,
-                  ),
-                ]
-                : null,
+        shadows: isPlaying
+            ? [
+                Shadow(
+                  color: colorScheme.primary.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                ),
+              ]
+            : null,
       ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
@@ -149,9 +152,9 @@ class MusicInfoWidget extends StatelessWidget {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                colorScheme.onSurface.withOpacity(0.9),
+                colorScheme.onSurface.withValues(alpha: 0.9),
                 colorScheme.primary,
-                colorScheme.onSurface.withOpacity(0.9),
+                colorScheme.onSurface.withValues(alpha: 0.9),
               ],
               stops: const [0.0, 0.5, 1.0],
               tileMode: TileMode.mirror,
@@ -181,43 +184,43 @@ class MusicInfoWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: List.generate(12, (index) {
-          final double height =
-              [
-                0.3,
-                0.5,
-                0.7,
-                0.9,
-                0.7,
-                0.6,
-                0.8,
-                0.5,
-                0.3,
-                0.7,
-                0.8,
-                0.5,
-              ][index % 12];
+          final double height = [
+            0.3,
+            0.5,
+            0.7,
+            0.9,
+            0.7,
+            0.6,
+            0.8,
+            0.5,
+            0.3,
+            0.7,
+            0.8,
+            0.5,
+          ][index % 12];
           final delay = (index * 100).ms;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2.0),
-            child: Container(
-                  width: 3,
-                  height: 24 * height,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                )
-                .animate(
-                  onPlay: (controller) => controller.repeat(reverse: true),
-                )
-                .scaleY(
-                  begin: height,
-                  end: height > 0.5 ? height - 0.4 : height + 0.4,
-                  duration: (800 + (index * 50)).ms,
-                  curve: Curves.easeInOut,
-                  delay: delay,
-                ),
+            child:
+                Container(
+                      width: 3,
+                      height: 24 * height,
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    )
+                    .animate(
+                      onPlay: (controller) => controller.repeat(reverse: true),
+                    )
+                    .scaleY(
+                      begin: height,
+                      end: height > 0.5 ? height - 0.4 : height + 0.4,
+                      duration: (800 + (index * 50)).ms,
+                      curve: Curves.easeInOut,
+                      delay: delay,
+                    ),
           );
         }),
       ),
@@ -232,7 +235,7 @@ class MusicInfoWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import '../widgets/add_to_playlist_sheet.dart';
 
 class MoreOptionsSheet extends StatelessWidget {
   final double playbackSpeed;
   final VoidCallback onChangePlaybackSpeed;
   final VoidCallback onShare;
   final VoidCallback onAddToPlaylist;
+  final String? title;
+  final String? artist;
+  final String? audioUrl;
 
   const MoreOptionsSheet({
     super.key,
@@ -12,6 +16,9 @@ class MoreOptionsSheet extends StatelessWidget {
     required this.onChangePlaybackSpeed,
     required this.onShare,
     required this.onAddToPlaylist,
+    this.title,
+    this.artist,
+    this.audioUrl,
   });
 
   @override
@@ -40,7 +47,22 @@ class MoreOptionsSheet extends StatelessWidget {
           title: const Text('Adicionar à playlist'),
           onTap: () {
             Navigator.pop(context);
-            onAddToPlaylist();
+            if (title != null && artist != null && audioUrl != null) {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) => AddToPlaylistSheet(
+                  title: title!,
+                  artist: artist!,
+                  filePath: audioUrl!,
+                ),
+              );
+            } else {
+              onAddToPlaylist();
+            }
           },
         ),
       ],

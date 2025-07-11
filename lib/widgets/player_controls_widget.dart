@@ -1,3 +1,5 @@
+import 'package:filely/shared/shared.dart';
+import 'package:filely/utils/color_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,6 +12,12 @@ class PlayerControlsWidget extends StatefulWidget {
   final VoidCallback onFastForward;
   final VoidCallback? onSpeedChange;
   final VoidCallback? onShare;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
+  final VoidCallback? onShuffle;
+  final VoidCallback? onRepeat;
+  final bool? isShuffleEnabled;
+  final bool? isRepeatEnabled;
 
   const PlayerControlsWidget({
     super.key,
@@ -21,6 +29,12 @@ class PlayerControlsWidget extends StatefulWidget {
     this.playbackSpeed,
     this.onSpeedChange,
     this.onShare,
+    this.onPrevious,
+    this.onNext,
+    this.onShuffle,
+    this.onRepeat,
+    this.isShuffleEnabled,
+    this.isRepeatEnabled,
   });
 
   @override
@@ -68,6 +82,34 @@ class _PlayerControlsWidgetState extends State<PlayerControlsWidget>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (widget.onShuffle != null || widget.onRepeat != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (widget.onShuffle != null)
+                  _buildToggleButton(
+                    Icons.shuffle,
+                    widget.isShuffleEnabled ?? false,
+                    widget.onShuffle!,
+                    colorScheme,
+                    'Aleatório',
+                  ),
+                if (widget.onShuffle != null && widget.onRepeat != null)
+                  const SizedBox(width: 32),
+                if (widget.onRepeat != null)
+                  _buildToggleButton(
+                    Icons.repeat,
+                    widget.isRepeatEnabled ?? false,
+                    widget.onRepeat!,
+                    colorScheme,
+                    'Repetir',
+                  ),
+              ],
+            ),
+          ),
+
         Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: Row(
@@ -85,19 +127,35 @@ class _PlayerControlsWidgetState extends State<PlayerControlsWidget>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildSkipButton(
-                Icons.skip_previous_rounded,
-                widget.onRewind,
-                colorScheme,
-              ),
+              if (widget.onPrevious != null)
+                _buildSkipButton(
+                  Icons.skip_previous_rounded,
+                  widget.onPrevious!,
+                  colorScheme,
+                )
+              else
+                _buildSkipButton(
+                  Icons.fast_rewind_rounded,
+                  widget.onRewind,
+                  colorScheme,
+                ),
+
               const SizedBox(width: 40),
               _buildPlayPauseButton(colorScheme),
               const SizedBox(width: 40),
-              _buildSkipButton(
-                Icons.skip_next_rounded,
-                widget.onFastForward,
-                colorScheme,
-              ),
+
+              if (widget.onNext != null)
+                _buildSkipButton(
+                  Icons.skip_next_rounded,
+                  widget.onNext!,
+                  colorScheme,
+                )
+              else
+                _buildSkipButton(
+                  Icons.fast_forward_rounded,
+                  widget.onFastForward,
+                  colorScheme,
+                ),
             ],
           ),
         ),
@@ -139,27 +197,26 @@ class _PlayerControlsWidgetState extends State<PlayerControlsWidget>
             shape: const CircleBorder(),
             padding: EdgeInsets.zero,
           ),
-          child:
-              widget.isBuffering == true
-                  ? SizedBox(
-                    width: 38,
-                    height: 38,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
-                  )
-                  : AnimatedBuilder(
-                    animation: _playPauseController,
-                    builder: (_, __) {
-                      return AnimatedIcon(
-                        icon: AnimatedIcons.play_pause,
-                        progress: _playPauseController,
-                        size: 38,
-                        color: colorScheme.onPrimaryContainer,
-                      );
-                    },
+          child: widget.isBuffering == true
+              ? SizedBox(
+                  width: 38,
+                  height: 38,
+                  child: CustomLoader(
+                    primaryColor: colorScheme.onPrimaryContainer,
+                    secondaryColor: colorScheme.onSecondaryContainer,
                   ),
+                )
+              : AnimatedBuilder(
+                  animation: _playPauseController,
+                  builder: (_, __) {
+                    return AnimatedIcon(
+                      icon: AnimatedIcons.play_pause,
+                      progress: _playPauseController,
+                      size: 38,
+                      color: colorScheme.onPrimaryContainer,
+                    );
+                  },
+                ),
         ),
       ],
     );
@@ -177,7 +234,9 @@ class _PlayerControlsWidgetState extends State<PlayerControlsWidget>
         ),
       ),
       style: FilledButton.styleFrom(
-        backgroundColor: colorScheme.surfaceVariant.withOpacity(0.7),
+        backgroundColor: colorScheme.surfaceContainerHighest.withValues(
+          alpha: 0.7,
+        ),
         foregroundColor: colorScheme.onSurfaceVariant,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
@@ -188,6 +247,33 @@ class _PlayerControlsWidgetState extends State<PlayerControlsWidget>
     return IconButton(
       onPressed: widget.onShare,
       icon: const Icon(Icons.share_rounded),
+    );
+  }
+
+  Widget _buildToggleButton(
+    IconData icon,
+    bool isActive,
+    VoidCallback onPressed,
+    ColorScheme colorScheme,
+    String tooltip,
+  ) {
+    return IconButton(
+      onPressed: () {
+        HapticFeedback.lightImpact();
+        onPressed();
+      },
+      icon: Icon(icon),
+      iconSize: 24,
+      color: isActive
+          ? colorScheme.primary
+          : colorScheme.onSurface.withValues(alpha: 0.6),
+      tooltip: tooltip,
+      style: IconButton.styleFrom(
+        backgroundColor: isActive
+            ? colorScheme.primary.withValues(alpha: 0.1)
+            : Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
 }

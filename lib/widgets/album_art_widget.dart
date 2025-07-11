@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'dart:ui';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:math' as math;
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filely/widgets/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class AlbumArtWidget extends StatefulWidget {
   final String albumArtUrl;
@@ -127,7 +129,7 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: baseColor.withOpacity(0.5),
+                      color: baseColor.withValues(alpha: 0.5),
                       blurRadius: widget.isPlaying ? 90 : 50,
                       spreadRadius: widget.isPlaying ? 8 : 4,
                     ),
@@ -135,10 +137,9 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
                 ),
               )
               .animate(
-                onPlay:
-                    widget.isPlaying
-                        ? (controller) => controller.repeat()
-                        : null,
+                onPlay: widget.isPlaying
+                    ? (controller) => controller.repeat()
+                    : null,
               )
               .scale(
                 begin: const Offset(0.95, 0.95),
@@ -162,7 +163,7 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
                 color: Colors.black87,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),
@@ -204,13 +205,13 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
             ),
             boxShadow: [
               BoxShadow(
-                color: colorScheme.shadow.withOpacity(0.3),
+                color: colorScheme.shadow.withValues(alpha: 0.3),
                 blurRadius: 25,
                 spreadRadius: 5,
                 offset: const Offset(0, 8),
               ),
               BoxShadow(
-                color: baseColor.withOpacity(0.2),
+                color: baseColor.withValues(alpha: 0.2),
                 blurRadius: 30,
                 spreadRadius: 2,
                 offset: const Offset(0, 4),
@@ -220,18 +221,18 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOutCubic,
-            margin:
-                widget.isPlaying && widget.showVinylEffect && !_isImageError
-                    ? const EdgeInsets.all(20)
-                    : EdgeInsets.zero,
+            margin: widget.isPlaying && widget.showVinylEffect && !_isImageError
+                ? const EdgeInsets.all(20)
+                : EdgeInsets.zero,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(
                 widget.isPlaying && widget.showVinylEffect && !_isImageError
                     ? 300
                     : 24,
               ),
-              child:
-                  _isImageError ? _buildPlaceholderImage() : _buildAlbumImage(),
+              child: _isImageError
+                  ? _buildPlaceholderImage()
+                  : _buildAlbumImage(),
             ),
           ),
         ),
@@ -244,21 +245,20 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
               ),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                margin:
-                    widget.isPlaying && widget.showVinylEffect
-                        ? const EdgeInsets.all(20)
-                        : EdgeInsets.zero,
+                margin: widget.isPlaying && widget.showVinylEffect
+                    ? const EdgeInsets.all(20)
+                    : EdgeInsets.zero,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight.add(const Alignment(0.3, 0.3)),
                     colors: [
-                      Colors.white.withOpacity(0.15),
-                      Colors.white.withOpacity(0.05),
+                      Colors.white.withValues(alpha: 0.15),
+                      Colors.white.withValues(alpha: 0.05),
                       Colors.transparent,
                       Colors.transparent,
-                      Colors.black.withOpacity(0.05),
-                      Colors.black.withOpacity(0.1),
+                      Colors.black.withValues(alpha: 0.05),
+                      Colors.black.withValues(alpha: 0.1),
                     ],
                     stops: const [0.0, 0.15, 0.3, 0.6, 0.8, 1.0],
                   ),
@@ -279,10 +279,9 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
               child: IgnorePointer(
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin:
-                      widget.showVinylEffect
-                          ? const EdgeInsets.all(20)
-                          : EdgeInsets.zero,
+                  margin: widget.showVinylEffect
+                      ? const EdgeInsets.all(20)
+                      : EdgeInsets.zero,
                   child: AnimatedOpacity(
                     opacity: 0.15,
                     duration: const Duration(milliseconds: 500),
@@ -331,8 +330,8 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withOpacity(0.0),
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withValues(alpha: 0.0),
+                          Colors.black.withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -352,7 +351,7 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
                         Text(
                           widget.artistName!,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 14,
                           ),
                         ),
@@ -422,8 +421,8 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
         gradient: RadialGradient(
           colors: [
             colorScheme.primaryContainer,
-            colorScheme.primaryContainer.withOpacity(0.8),
-            colorScheme.primaryContainer.withOpacity(0.7),
+            colorScheme.primaryContainer.withValues(alpha: 0.8),
+            colorScheme.primaryContainer.withValues(alpha: 0.7),
           ],
           stops: const [0.2, 0.6, 1.0],
         ),
@@ -441,18 +440,17 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
               ),
               physics: const NeverScrollableScrollPhysics(),
               itemCount: 25,
-              itemBuilder:
-                  (context, index) => Icon(
-                    Icons.music_note,
-                    size: 20,
-                    color: colorScheme.onPrimaryContainer,
-                  ),
+              itemBuilder: (context, index) => Icon(
+                Icons.music_note,
+                size: 20,
+                color: colorScheme.onPrimaryContainer,
+              ),
             ),
           ),
           Icon(
             Icons.album,
             size: 80,
-            color: colorScheme.onPrimaryContainer.withOpacity(0.8),
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
           ).animate().scale(
             begin: const Offset(0.8, 0.8),
             end: const Offset(1.0, 1.0),
@@ -472,27 +470,28 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                  child: Container(
-                        width: 4,
-                        height: 30 * height,
-                        decoration: BoxDecoration(
-                          color: colorScheme.onPrimaryContainer.withOpacity(
-                            0.6,
+                  child:
+                      Container(
+                            width: 4,
+                            height: 30 * height,
+                            decoration: BoxDecoration(
+                              color: colorScheme.onPrimaryContainer.withValues(
+                                alpha: 0.6,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          )
+                          .animate(
+                            onPlay: (controller) =>
+                                controller.repeat(reverse: true),
+                          )
+                          .scaleY(
+                            begin: height,
+                            end: height > 0.5 ? height - 0.3 : height + 0.3,
+                            duration: 1.seconds,
+                            delay: delay,
+                            curve: Curves.easeInOut,
                           ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      )
-                      .animate(
-                        onPlay:
-                            (controller) => controller.repeat(reverse: true),
-                      )
-                      .scaleY(
-                        begin: height,
-                        end: height > 0.5 ? height - 0.3 : height + 0.3,
-                        duration: 1.seconds,
-                        delay: delay,
-                        curve: Curves.easeInOut,
-                      ),
                 );
               }),
             ),
@@ -527,19 +526,20 @@ class _AlbumArtWidgetState extends State<AlbumArtWidget>
           borderRadius: BorderRadius.circular(
             widget.isPlaying && widget.showVinylEffect ? 300 : 24,
           ),
-          color: Colors.grey.withOpacity(0.15),
+          color: Colors.grey.withValues(alpha: 0.15),
         ),
         child: Center(
           child: SizedBox(
             width: 80,
             height: 80,
-            child: CircularProgressIndicator(
-                  color: baseColor,
-                  backgroundColor: Colors.grey.withOpacity(0.2),
-                  strokeWidth: 2,
-                )
-                .animate(onPlay: (controller) => controller.repeat())
-                .rotate(duration: 1.5.seconds, begin: 0, end: 2 * math.pi),
+            child:
+                CustomLoader(
+                      primaryColor: baseColor,
+                      secondaryColor: baseColor.withValues(alpha: 0.5),
+                      size: 80,
+                    )
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .rotate(duration: 1.5.seconds, begin: 0, end: 2 * math.pi),
           ),
         ),
       ),

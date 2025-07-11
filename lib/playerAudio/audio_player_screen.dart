@@ -1,19 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:filely/widgets/app_bar_widget.dart';
-import 'package:filely/widgets/album_art_widget.dart';
-import 'package:filely/widgets/music_info_widget.dart';
-import 'package:filely/widgets/progress_bar_widget.dart';
-import 'package:filely/widgets/player_controls_widget.dart';
-import 'package:audio_service/audio_service.dart';
-import 'package:filely/utils/my_audio_handler.dart';
-import 'package:filely/main.dart'; // para acessar o audioHandler global
 import 'dart:async';
+
+import 'package:audio_service/audio_service.dart';
+import 'package:filely/main.dart';
+import 'package:filely/providers/playlist_provider.dart';
+import 'package:filely/screens/playlists/playlists_screen.dart';
+import 'package:filely/widgets/album_art_widget.dart';
+import 'package:filely/widgets/app_bar_widget.dart';
+import 'package:filely/widgets/music_info_widget.dart';
+import 'package:filely/widgets/player_controls_widget.dart';
+import 'package:filely/widgets/progress_bar_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
   final String title;
   final String artist;
   final String albumArtUrl;
   final String audioUrl;
+  final bool syncWithCurrentTrack;
 
   const AudioPlayerScreen({
     super.key,
@@ -21,6 +26,7 @@ class AudioPlayerScreen extends StatefulWidget {
     required this.artist,
     required this.albumArtUrl,
     required this.audioUrl,
+    this.syncWithCurrentTrack = false,
   });
 
   @override
@@ -39,6 +45,8 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
   late StreamSubscription<MediaItem?> _mediaItemSubscription;
   late StreamSubscription<Duration> _positionSubscription;
 
+  bool _isSeeking = false;
+
   @override
   void initState() {
     super.initState();
@@ -48,29 +56,40 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
 
   Future<void> _initializePlayer() async {
     try {
-      // Configura media item
-      final mediaItem = MediaItem(
-        id: widget.audioUrl,
-        title: widget.title,
-        artist: widget.artist,
-        artUri: Uri.tryParse(widget.albumArtUrl),
-        duration: await _getDuration(),
-      );
+      if (widget.syncWithCurrentTrack) {
+        _configureStreams();
 
-      // Configura e inicia reprodução
-      await audioHandler.setMediaItem(mediaItem);
+        final currentState = audioHandler.playbackState.value;
+        final currentMediaItem = audioHandler.mediaItem.value;
 
-      // Configure streams antes de iniciar a reprodução
-      _configureStreams();
+        if (mounted) {
+          setState(() {
+            _isPlaying = currentState.playing;
+            _position = currentState.updatePosition;
+            _duration = currentMediaItem?.duration ?? Duration.zero;
+          });
+        }
+      } else {
+        final mediaItem = MediaItem(
+          id: widget.audioUrl,
+          title: widget.title,
+          artist: widget.artist,
+          artUri: Uri.tryParse(widget.albumArtUrl),
+          duration: await _getDuration(),
+        );
 
-      // Iniciar reprodução após configuração
-      await audioHandler.play();
+        await audioHandler.setMediaItem(mediaItem);
+
+        _configureStreams();
+
+        await audioHandler.play();
+      }
     } catch (e) {
-      debugPrint('Erro ao inicializar o player: $e');
+      debugPrint('Error initializing player: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erro ao reproduzir o áudio: ${e.toString()}'),
+            content: Text('Error playing audio: ${e.toString()}'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
@@ -80,31 +99,34 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
   }
 
   Future<Duration?> _getDuration() async {
-    // Implemente lógica para obter duração se disponível
     return null;
   }
 
   void _configureStreams() {
-    // Listen to playback state changes
-    _playbackStateSubscription = audioHandler.playbackState.listen((state) {
-      debugPrint(
-        'PlaybackState update: playing=${state.playing}, '
-        'processingState=${state.processingState}',
-      );
+    _playbackStateSubscription = audioHandler.playbackState
+        .distinct()
+        .listen((state) {
+          debugPrint(
+            'PlaybackState update: playing=${state.playing}, '
+            'processingState=${state.processingState}',
+          );
 
-      if (mounted) {
-        setState(() {
-          _isPlaying = state.playing;
-          _isBuffering =
-              state.processingState == AudioProcessingState.buffering ||
-              state.processingState == AudioProcessingState.loading;
-          _playbackSpeed = state.speed;
+          if (mounted) {
+            setState(() {
+              _isPlaying = state.playing;
+              _isBuffering =
+                  state.processingState == AudioProcessingState.buffering ||
+                  state.processingState == AudioProcessingState.loading;
+              _playbackSpeed = state.speed;
+
+              if (!_isSeeking) {
+                _position = state.position;
+              }
+            });
+          }
         });
-      }
-    });
 
-    // Listen to media item changes (for duration updates)
-    _mediaItemSubscription = audioHandler.mediaItem.listen((item) {
+    _mediaItemSubscription = audioHandler.mediaItem.distinct().listen((item) {
       if (item != null && mounted) {
         setState(() {
           _duration = item.duration ?? Duration.zero;
@@ -112,16 +134,18 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
       }
     });
 
-    // Listen to position updates
-    _positionSubscription = AudioService.position.listen((pos) {
-      if (mounted) {
-        setState(() {
-          _position = pos;
+    _positionSubscription = AudioService.position
+        .debounceTime(
+          const Duration(milliseconds: 200),
+        ) 
+        .listen((pos) {
+          if (mounted && !_isSeeking) {
+            setState(() {
+              _position = pos;
+            });
+          }
         });
-      }
-    });
 
-    // Synchronize with current state
     final currentState = audioHandler.playbackState.value;
     final currentMediaItem = audioHandler.mediaItem.value;
 
@@ -135,20 +159,31 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
   }
 
   void _togglePlayPause() async {
-    debugPrint('Toggle play/pause. Current state: $_isPlaying');
-
-    if (_isPlaying) {
-      await audioHandler.pause();
-    } else {
-      await audioHandler.play();
+    try {
+      if (_isPlaying) {
+        await audioHandler.pause();
+      } else {
+        await audioHandler.play();
+      }
+    } catch (e) {
+      debugPrint('Error toggling play/pause: $e');
     }
+  }
 
-    // Verifica o estado após a ação para garantir consistência
-    Future.delayed(const Duration(milliseconds: 100), () {
-      final newState = audioHandler.playbackState.value;
-      if (_isPlaying != newState.playing && mounted) {
+  void _seekToPosition(Duration position) async {
+    debugPrint('Seeking to position: ${position.inMilliseconds}ms');
+
+    setState(() {
+      _isSeeking = true;
+      _position = position;
+    });
+
+    await audioHandler.seek(position);
+
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted) {
         setState(() {
-          _isPlaying = newState.playing;
+          _isSeeking = false;
         });
       }
     });
@@ -166,11 +201,29 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
   @override
   Widget build(BuildContext context) {
     final cappedPosition = _position > _duration ? _duration : _position;
+
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            AudioAppBarWidget(onBack: () => Navigator.pop(context)),
+            AudioAppBarWidget(
+              onBack: () => Navigator.pop(context),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.playlist_play),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PlaylistsScreen(),
+                      ),
+                    );
+                  },
+                  tooltip: 'Playlists',
+                ),
+              ],
+            ),
             Expanded(child: AlbumArtWidget(albumArtUrl: widget.albumArtUrl)),
             MusicInfoWidget(
               title: widget.title,
@@ -187,26 +240,42 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
               child: ProgressBarWidget(
                 position: cappedPosition,
                 duration: _duration,
-                onSeek: (value) => audioHandler.seek(value),
+                onSeek: _seekToPosition,
+                accentColor: colorScheme.primary,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 32.0),
-              child: PlayerControlsWidget(
-                isPlaying: _isPlaying,
-                isBuffering: _isBuffering,
-                playbackSpeed: _playbackSpeed,
-                onPlayPause: _togglePlayPause,
-                onRewind: () {
-                  audioHandler.seek(Duration.zero);
-                },
-                onFastForward: () {
-                  final newPosition = _position + const Duration(seconds: 10);
-                  audioHandler.seek(
-                    newPosition > _duration ? _duration : newPosition,
+              child: Consumer<PlaylistProvider>(
+                builder: (context, playlistProvider, child) {
+                  return PlayerControlsWidget(
+                    isPlaying: _isPlaying,
+                    isBuffering: _isBuffering,
+                    playbackSpeed: _playbackSpeed,
+                    onPlayPause: _togglePlayPause,
+                    onRewind: () {
+                      _seekToPosition(Duration.zero);
+                    },
+                    onFastForward: () {
+                      final newPosition =
+                          _position + const Duration(seconds: 10);
+                      _seekToPosition(
+                        newPosition > _duration ? _duration : newPosition,
+                      );
+                    },
+                    onSpeedChange: _changePlaybackSpeed,
+                    onPrevious: playlistProvider.hasPrevious
+                        ? () => playlistProvider.previousTrack()
+                        : null,
+                    onNext: playlistProvider.hasNext
+                        ? () => playlistProvider.nextTrack()
+                        : null,
+                    onShuffle: () => playlistProvider.toggleShuffle(),
+                    onRepeat: () => playlistProvider.toggleRepeat(),
+                    isShuffleEnabled: playlistProvider.isShuffleEnabled,
+                    isRepeatEnabled: playlistProvider.isRepeatEnabled,
                   );
                 },
-                onSpeedChange: _changePlaybackSpeed,
               ),
             ),
           ],
@@ -218,7 +287,6 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // Reconfigurar streams quando o app volta para o foreground
       _playbackStateSubscription.cancel();
       _mediaItemSubscription.cancel();
       _positionSubscription.cancel();
