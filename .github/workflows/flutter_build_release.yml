@@ -1,0 +1,69 @@
+name: Build Flutter App and Create GitHub Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build Flutter App
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Configure Gradle for unsigned release
+        run: |
+          echo "android.useAndroidX=true" >> android/gradle.properties
+          echo "android.enableJetifier=true" >> android/gradle.properties
+          echo "android.enableR8=true" >> android/gradle.properties
+          echo "org.gradle.jvmargs=-Xmx1536M" >> android/gradle.properties
+          # Desativar assinatura para build de release
+          sed -i 's/signingConfigs.release/null/g' android/app/build.gradle || true
+          sed -i '/signingConfigs {/,/}/d' android/app/build.gradle || true
+        
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Build AppBundle
+        run: flutter build appbundle --release
+
+      - name: Get version from pubspec
+        id: version
+        run: |
+          VERSION=$(grep -oP '(?<=version: ).*(?=\+)' pubspec.yaml || echo '1.0.0')
+          echo "app_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.app_version }}-build-${{ github.run_number }}
+          name: Release v${{ steps.version.outputs.app_version }} (Build ${{ github.run_number }})
+          body: |
+            ⚠️ Unsigned release build - para testes internos ⚠️
+            
+            Automatic build from push to main.
+            
+            ## Changes
+            ${{ github.event.head_commit.message }}
+          files: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
