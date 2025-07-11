@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:filely/playerAudio/audio_player_screen.dart';
+import 'package:filely/Audio_Player/audio_player_screen.dart';
 import 'package:filely/providers/file_operations_provider.dart';
 import 'package:filely/utils/utils.dart';
 import 'package:filely/widgets/add_to_playlist_sheet.dart';

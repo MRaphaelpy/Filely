@@ -1,9 +1,9 @@
-import 'package:filely/screens/playlists/playlists_screen.dart';
+import 'package:filely/Audio_Player/playlists/playlists_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/playlist_provider.dart';
 import '../models/playlist_models.dart';
-import '../screens/playlists/create_playlist_screen.dart';
+import '../Audio_Player/playlists/create_playlist_screen.dart';
 
 class AddToPlaylistSheet extends StatelessWidget {
   final String title;
