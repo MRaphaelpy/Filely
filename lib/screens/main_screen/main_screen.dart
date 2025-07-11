@@ -8,11 +8,11 @@ import '../../providers/providers.dart';
 import '../../utils/dialogs.dart';
 import '../../widgets/app_icon_header.dart';
 import '../../widgets/custom_navigation_bar.dart';
-import '../../widgets/mini_player.dart';
+import '../../Audio_Player/mini_player.dart';
 import '../browse/browse.dart';
 import '../settings.dart';
 import '../share.dart';
-import '../playlists/playlists_screen.dart';
+import '../../Audio_Player/playlists/playlists_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
