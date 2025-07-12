@@ -28,6 +28,34 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Get Flutter and Dart versions
+        id: versions
+        run: |
+          FLUTTER_VERSION=$(flutter --version | grep -oP '(?<=Flutter )[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+          DART_VERSION=$(flutter --version | grep -oP '(?<=Dart SDK version: )[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+          echo "flutter_version=$FLUTTER_VERSION" >> $GITHUB_OUTPUT
+          echo "dart_version=$DART_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Get app version
+        id: app_version
+        run: |
+          VERSION=$(grep -oP '(?<=version: ).*(?=\+)' pubspec.yaml || echo '1.0.0')
+          BUILD_NUMBER=$(grep -oP '(?<=\+)[0-9]+' pubspec.yaml || echo '1')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Get commit info
+        id: commit_info
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          COMMIT_DATE=$(git log -1 --pretty=%ad --date=format:'%d/%m/%Y %H:%M')
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+          echo "date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+
       - name: Run Flutter Pub Get
         run: flutter pub get
 
@@ -40,13 +68,56 @@ jobs:
       - name: Upload Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: build-${{ github.run_number }}
-          name: Filely Build ${{ github.run_number }}
+          tag_name: v${{ steps.app_version.outputs.version }}-build-${{ github.run_number }}
+          name: 📱 Filely v${{ steps.app_version.outputs.version }} (Build ${{ github.run_number }})
           body: |
-            ✅ Auto-generated release for Filely.
-            Includes:
-            - APK (.apk)
-            - App Bundle (.aab)
+            # 🇧🇷 Português
+            
+            ## ✨ Nova versão do Filely
+            
+            Build automático a partir do branch **${{ github.ref_name }}**
+            
+            ### 📋 Informações da Build
+            - **Versão**: ${{ steps.app_version.outputs.version }} (build ${{ steps.app_version.outputs.build_number }})
+            - **Flutter**: ${{ steps.versions.outputs.flutter_version }}
+            - **Dart**: ${{ steps.versions.outputs.dart_version }}
+            - **Data**: ${{ steps.commit_info.outputs.date }}
+            
+            ### 🔄 Últimas alterações
+            > ${{ steps.commit_info.outputs.message }}
+            
+            _Commit por: ${{ steps.commit_info.outputs.author }}_
+            
+            ### 📦 Arquivos
+            - **APK**: Instalação direta em dispositivos Android
+            - **AAB**: Formato para publicação na Google Play
+            
+            ⚠️ **Nota**: Esta é uma versão não-assinada para testes internos. Para instalação, pode ser necessário permitir "Fontes desconhecidas".
+            
+            ---
+            
+            # 🇬🇧 English
+            
+            ## ✨ New Filely Version
+            
+            Automatic build from **${{ github.ref_name }}** branch
+            
+            ### 📋 Build Information
+            - **Version**: ${{ steps.app_version.outputs.version }} (build ${{ steps.app_version.outputs.build_number }})
+            - **Flutter**: ${{ steps.versions.outputs.flutter_version }}
+            - **Dart**: ${{ steps.versions.outputs.dart_version }}
+            - **Date**: ${{ steps.commit_info.outputs.date }}
+            
+            ### 🔄 Latest changes
+            > ${{ steps.commit_info.outputs.message }}
+            
+            _Commit by: ${{ steps.commit_info.outputs.author }}_
+            
+            ### 📦 Files
+            - **APK**: Direct installation on Android devices
+            - **AAB**: Format for Google Play publishing
+            
+            ⚠️ **Note**: This is an unsigned version for internal testing. For installation, you may need to allow "Unknown sources".
           files: |
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/bundle/release/app-release.aab
